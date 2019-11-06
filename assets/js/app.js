@@ -37,11 +37,11 @@ d3.csv("./assets/data/data.csv").then(function (healthData) {
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-        .domain([8, d3.max(healthData, d => d.poverty)])
+        .domain([8, d3.max(healthData, d => d.smokes)])
         .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-        .domain([0, d3.max(healthData, d => d.smokes)])
+        .domain([0, d3.max(healthData, d => d.poverty)])
         .range([height, 0]);
 
     // Step 3: Create axis functions
@@ -67,8 +67,8 @@ d3.csv("./assets/data/data.csv").then(function (healthData) {
         .data(healthData)
         .enter()
         .append("circle")
-        .attr("cx", d => xLinearScale(d.poverty))
-        .attr("cy", d => yLinearScale(d.smokes))
+        .attr("cx", d => xLinearScale(d.smokes))
+        .attr("cy", d => yLinearScale(d.poverty))
         .attr("r", "15")
         .attr("fill", "blue")
         .attr("stroke-width", 2)
@@ -79,10 +79,10 @@ d3.csv("./assets/data/data.csv").then(function (healthData) {
 
     circleLabels
         .attr("x", function (d) {
-            return xLinearScale(d.poverty);
+            return xLinearScale(d.smokes);
         })
         .attr("y", function (d) {
-            return yLinearScale(d.smokes);
+            return yLinearScale(d.poverty);
         })
         .text(function (d) {
             return d.abbr;
