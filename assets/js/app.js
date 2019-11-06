@@ -99,7 +99,7 @@ d3.csv("./assets/data/data.csv").then(function (healthData) {
         .attr("class", "tooltip")
         .offset([80, -80])
         .html(function (d) {
-            return (`${d.abbr}<hr>Poverty Rate: ${d.poverty}<br>Smoking Rate: ${d.smokes}`);
+            return (`<strong>${d.abbr}<hr>Poverty Rate: ${d.poverty}%<br>Smoking Rate: ${d.smokes}%`);
         });
 
     console.log("right before Step 7")
