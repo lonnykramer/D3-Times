@@ -64,23 +64,25 @@ function renderCircles(circlesGroup, newXScale, chosenXaxis) {
 function updateToolTip(chosenXAxis, circlesGroup) {
 
     if (chosenXAxis === "poverty") {
-        var label = "Poverty %:";
+        var label = "Poverty";
     }
     else {
-        var label = "Obesity %";
+        var label = "Obesity";
     }
 
     var toolTip = d3.tip()
         .attr("class", "tooltip")
-        .offset([80, -60])
+        .offset([80, -80])
         .html(function (d) {
-            return (`<strong>${d.abbr}<hr>Smoking Rate:${d.smoke}%<br>${d[chosenXAxis]}%`);
+            return (`<strong>${d.abbr}<hr>Smoking Rate: ${d.smokes}%<br>${label}: ${d[chosenXAxis]}%`);
         });
+
 
     circlesGroup.call(toolTip);
 
     circlesGroup.on("mouseover", function (data) {
-        toolTip.show(data);
+        toolTip.show(data, this)
+        
     })
         // onmouseout event
         .on("mouseout", function (data, index) {
@@ -116,11 +118,13 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
     // append x axis
     var xAxis = chartGroup.append("g")
         .classed("x-axis", true)
+        .attr("class", "axisX")
         .attr("transform", `translate(0, ${height})`)
         .call(bottomAxis);
 
     // append y axis
     chartGroup.append("g")
+        .attr("class", "axisY")
         .call(leftAxis);
 
     // append initial circles
@@ -136,6 +140,27 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
         .attr("stroke", "green")
         .attr("opacity", ".5");
 
+    // // trying to add state abbrvs
+    // var circleLabels = chartGroup.selectAll(null).data(healthData).enter().append("text");
+
+    // circleLabels
+    //     .attr("x", function (d) {
+    //         return xLinearScale(d[chosenXAxis]);
+    //     })
+    //     .attr("y", function (d) {
+    //         return yLinearScale(d.smokes);
+    //     })
+    //     .text(function (d) {
+    //         return d.abbr;
+    //     })
+    //     .attr("font-family", "sans-serif")
+    //     .attr("font-size", "10px")
+    //     .attr("text-anchor", "middle")
+    //     .attr("fill", "black"); 
+
+
+
+
     // Create group for  2 x- axis labels
     var labelsGroup = chartGroup.append("g")
         .attr("transform", `translate(${width / 2}, ${height + 20})`);
@@ -145,6 +170,7 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
         .attr("y", 20)
         .attr("value", "poverty") // value to grab for event listener
         .classed("active", true)
+        .attr("class", "axisTexxt")
         .text("Poverty Rate (%)");
 
     var obesityRate = labelsGroup.append("text")
@@ -152,6 +178,7 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
         .attr("y", 40)
         .attr("value", "obesity") // value to grab for event listener
         .classed("inactive", true)
+        .attr("class", "axisTexxt")
         .text("Obesity Rate (%)");
 
     // append y axis
@@ -160,6 +187,7 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
         .attr("y", 0 - margin.left)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
+        .attr("class", "axisText")
         .classed("axis-text", true)
         .text("Smoking Rate (%)");
 
@@ -169,6 +197,10 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
     // x axis labels event listener
     labelsGroup.selectAll("text")
         .on("click", function () {
+            // trying to clear everything
+            // selectAll(d.abbr).remove();
+
+
             // get value of selection
             var value = d3.select(this).attr("value");
             if (value !== chosenXAxis) {
@@ -204,11 +236,44 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
                     obesityRate
                         .classed("active", false)
                         .classed("inactive", true);
-                        povertyRate
+                    povertyRate
                         .classed("active", true)
                         .classed("inactive", false);
                 }
             }
+            // trying to add state abbrvs
+            var circleLabels = []
+            var clearLabels = chartGroup.selectAll(null).data(healthData).enter().append("text");
+            var circleLabels = chartGroup.selectAll(null).data(healthData).enter().append("text");
+
+
+            // clearLabels
+            //     .attr("x", function (d) {
+            //         return xLinearScale(d[chosenXAxis]);
+            //     })
+            //     .attr("y", function (d) {
+            //         return yLinearScale(d.smokes);
+            //     })
+            //     .text(function (d) {
+
+            //         d.abbr.remove();
+            //     })
+
+            circleLabels
+                .attr("x", function (d) {
+                    return xLinearScale(d[chosenXAxis]);
+                })
+                .attr("y", function (d) {
+                    return yLinearScale(d.smokes);
+                })
+                .text(function (d) {
+                    // d.abbr.remove();
+                    return d.abbr;
+                })
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "10px")
+                .attr("text-anchor", "middle")
+                .attr("fill", "black");
         });
 }).catch(function (error) {
     console.log(error);
