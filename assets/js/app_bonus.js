@@ -250,7 +250,7 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
                 // circleLabels.text("");
 
                 circleLabels
-                .text("")
+                
                     .attr("x", function (d) {
                         return xLinearScale(d[chosenXAxis]);
                     })
@@ -260,6 +260,7 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
                     .text(function (d) {
                         // d.abbr.remove();
                         return d.abbr;
+                        // to have the labels move with the bubbles, need to make a separate function for the labels
                     })
                     .attr("font-family", "sans-serif")
                     .attr("font-size", "10px")
