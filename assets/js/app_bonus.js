@@ -82,7 +82,7 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 
     circlesGroup.on("mouseover", function (data) {
         toolTip.show(data, this)
-        
+
     })
         // onmouseout event
         .on("mouseout", function (data, index) {
@@ -240,11 +240,36 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
                         .classed("active", true)
                         .classed("inactive", false);
                 }
+
+
+                // trying to stick labels to circles
+                // chartgroup.selectAll("text").remove(); 
+                var circleLabels = chartGroup.selectAll(null).data(healthData)
+                    .enter().append("text");
+
+                // circleLabels.text("");
+
+                circleLabels
+                .text("")
+                    .attr("x", function (d) {
+                        return xLinearScale(d[chosenXAxis]);
+                    })
+                    .attr("y", function (d) {
+                        return yLinearScale(d.smokes);
+                    })
+                    .text(function (d) {
+                        // d.abbr.remove();
+                        return d.abbr;
+                    })
+                    .attr("font-family", "sans-serif")
+                    .attr("font-size", "10px")
+                    .attr("text-anchor", "middle")
+                    .attr("fill", "black");
             }
             // trying to add state abbrvs
-            var circleLabels = []
-            var clearLabels = chartGroup.selectAll(null).data(healthData).enter().append("text");
-            var circleLabels = chartGroup.selectAll(null).data(healthData).enter().append("text");
+            // var circleLabels = []
+            // var clearLabels = chartGroup.selectAll(null).data(healthData).enter().append("text");
+            // var circleLabels = chartGroup.selectAll(null).data(healthData).enter().append("text");
 
 
             // clearLabels
@@ -259,21 +284,21 @@ d3.csv("./assets/data/data.csv").then(function (healthData, err) {
             //         d.abbr.remove();
             //     })
 
-            circleLabels
-                .attr("x", function (d) {
-                    return xLinearScale(d[chosenXAxis]);
-                })
-                .attr("y", function (d) {
-                    return yLinearScale(d.smokes);
-                })
-                .text(function (d) {
-                    // d.abbr.remove();
-                    return d.abbr;
-                })
-                .attr("font-family", "sans-serif")
-                .attr("font-size", "10px")
-                .attr("text-anchor", "middle")
-                .attr("fill", "black");
+            // circleLabels
+            //     .attr("x", function (d) {
+            //         return xLinearScale(d[chosenXAxis]);
+            //     })
+            //     .attr("y", function (d) {
+            //         return yLinearScale(d.smokes);
+            //     })
+            //     .text(function (d) {
+            //         // d.abbr.remove();
+            //         return d.abbr;
+            //     })
+            //     .attr("font-family", "sans-serif")
+            //     .attr("font-size", "10px")
+            //     .attr("text-anchor", "middle")
+            //     .attr("fill", "black");
         });
 }).catch(function (error) {
     console.log(error);
